@@ -1,25 +1,20 @@
 {
-  "name": "souqna-marketplace",
-  "version": "0.1.0",
+  "name": "vidflow-arabic-dashboard",
+  "version": "1.0.0",
   "private": true,
-  "description": "Arabic RTL marketplace dashboard and API, with Flutter mobile app sources",
-  "packageManager": "npm@10.9.2",
-  "engines": { "node": ">=20" },
+  "description": "Arabic RTL social video publishing dashboard with Node.js API scaffold",
+  "type": "commonjs",
+  "main": "server.js",
   "scripts": {
-    "start": "node server/index.js",
-    "dev": "node --watch server/index.js",
-    "seed": "node server/seed.js",
-    "check": "node --check server/index.js && node --check server/app.js && node --check server/routes.js && node --check server/store.js && node --check server/auth.js && node --check server/db.js && node --check server/seed.js && node --check api/index.js && node --check public/app.js && node --check scripts/smoke-test.js",
-    "smoke": "node scripts/smoke-test.js",
-    "zip": "bash scripts/package.sh"
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node --check server.js && node --check public/app.js"
   },
+  "engines": { "node": ">=20" },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "pg": "^8.13.1"
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0"
   }
 }

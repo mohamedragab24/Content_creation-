@@ -1,19 +1,133 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#102a43">
-  <meta name="description" content="لوحة إدارة سوقنا للتجارة الإلكترونية">
-  <title>سوقنا — لوحة التحكم</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f7f7fb" />
+  <meta name="description" content="فيديو فلو — لوحة عربية لإدارة محتوى الفيديو والمنشورات الاجتماعية." />
+  <title>فيديو فلو | إدارة المحتوى</title>
+  <link rel="icon" href="/assets/mark.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <script src="/app.js" defer></script>
 </head>
 <body>
-  <div id="toast-region" class="toast-region" aria-live="polite"></div>
-  <div id="app"></div>
-  <script src="/app.js" defer></script>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a href="#overview" class="brand" aria-label="فيديو فلو — الصفحة الرئيسية">
+      <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="2" y="2" width="28" height="28" rx="10" fill="currentColor"/><path d="M13 9.8v12.4l10-6.2z" fill="#fff"/></svg></span>
+      <span class="brand-text"><strong>فيديو فلو</strong><small>أفكارك.. تصبح أكثر</small></span>
+    </a>
+    <div class="side-label">مساحة العمل</div>
+    <nav class="nav-list" aria-label="القائمة الرئيسية">
+      <button class="nav-item active" data-page="overview"><span class="nav-icon">◫</span><span>نظرة عامة</span></button>
+      <button class="nav-item" data-page="create"><span class="nav-icon">▣</span><span>صناعة الفيديو</span><span class="new-pill">جديد</span></button>
+      <button class="nav-item" data-page="schedule"><span class="nav-icon">▦</span><span>جدول النشر</span></button>
+      <button class="nav-item" data-page="analytics"><span class="nav-icon">▥</span><span>التحليلات</span></button>
+      <button class="nav-item" data-page="comments"><span class="nav-icon">▤</span><span>التعليقات</span><span class="count-pill">12</span></button>
+      <button class="nav-item" data-page="accounts"><span class="nav-icon">↗</span><span>ربط الحسابات</span></button>
+      <button class="nav-item" data-page="settings"><span class="nav-icon">⚙</span><span>الإعدادات</span></button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="upgrade-card">
+        <div class="sparkle">✦</div><span class="eyebrow">مساحة العمل التجريبية</span>
+        <h3>محتوى أفضل،<br/>نتائج أكبر</h3>
+        <p>اربط حساباتك لبدء متابعة أداء محتواك.</p>
+        <button class="button button-white button-sm" data-goto="accounts">ربط الحسابات <span>←</span></button>
+        <div class="orb orb-one"></div><div class="orb orb-two"></div>
+      </div>
+      <div class="workspace-foot"><span class="status-dot"></span> مساحة العمل التجريبية</div>
+    </div>
+  </aside>
+
+  <main class="main-area">
+    <header class="topbar">
+      <div class="welcome-block"><div class="welcome-line"><span class="sun">☀️</span><h1 id="welcome-title">مساء الخير، سارة</h1></div><p id="today-label">الأحد، ١٩ أكتوبر ٢٠٢٦</p></div>
+      <div class="top-actions">
+        <label class="search-box"><span>⌕</span><input id="search-input" type="search" placeholder="البحث في الفيديوهات أو المنشورات..." aria-label="بحث"/><kbd>⌘ K</kbd></label>
+        <button class="icon-button notification-btn" aria-label="الإشعارات" data-toast="لا توجد إشعارات جديدة">♧<i></i></button>
+        <span class="top-divider"></span><button class="profile-button" data-goto="settings"><span class="profile-copy"><strong>سارة أحمد</strong><small>صانعة محتوى</small></span><span class="avatar">س</span><span class="chevron">⌄</span></button>
+      </div>
+    </header>
+
+    <div class="notice-banner"><span class="notice-icon">ⓘ</span><span>وضع العرض التجريبي — الأرقام والمنشورات أمثلة توضيحية. اربط المنصات ومفاتيح API لعرض بياناتك الحقيقية.</span><button class="notice-close" aria-label="إخفاء التنبيه">×</button></div>
+
+    <section class="page active" id="page-overview" data-page-title="نظرة عامة">
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-top"><span class="stat-label">إجمالي المشاهدات</span><span class="stat-icon cyan">◎</span></div><div class="stat-value">٢٤٨٬٠٠٠</div><div class="stat-foot"><span class="trend up">↑ 12%</span><span>مقارنة بالأسبوع الماضي</span></div></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-label">التفاعل</span><span class="stat-icon rose">♡</span></div><div class="stat-value">٨٫٦٪</div><div class="stat-foot"><span class="trend up">↑ 2.4%</span><span>مقارنة بالأسبوع الماضي</span></div></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-label">المنشورات</span><span class="stat-icon violet">▤</span></div><div class="stat-value">٣٢</div><div class="stat-foot"><span class="trend up">↑ 6</span><span>مقارنة بالأسبوع الماضي</span></div></article>
+        <article class="stat-card"><div class="stat-top"><span class="stat-label">التعليقات</span><span class="stat-icon amber">▧</span></div><div class="stat-value">١٬٢٤٨</div><div class="stat-foot"><span class="trend up">↑ 18%</span><span>مقارنة بالأسبوع الماضي</span></div></article>
+      </div>
+
+      <div class="overview-grid">
+        <section class="panel chart-panel"><div class="panel-heading"><div><h2>أداء المحتوى</h2><p>متابعة المشاهدات والتفاعل عبر الوقت</p></div><select class="select small-select" id="chart-range" aria-label="الفترة"><option>آخر ٧ أيام</option><option>آخر ٣٠ يومًا</option><option>هذا الشهر</option></select></div>
+          <div class="chart-wrap"><div class="chart-y-labels"><span>٨٠ ألف</span><span>٦٠ ألف</span><span>٤٠ ألف</span><span>٢٠ ألف</span><span>٠</span></div><svg class="chart" viewBox="0 0 760 190" preserveAspectRatio="none" role="img" aria-label="رسم بياني للمشاهدات والتفاعل"><defs><linearGradient id="purple-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7754ef" stop-opacity=".18"/><stop offset="1" stop-color="#7754ef" stop-opacity="0"/></linearGradient><linearGradient id="blue-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#35b9d3" stop-opacity=".15"/><stop offset="1" stop-color="#35b9d3" stop-opacity="0"/></linearGradient></defs><path class="grid-line" d="M0 12H760 M0 52H760 M0 92H760 M0 132H760 M0 172H760"/><path d="M0 143 L126 124 L253 108 L380 77 L506 91 L633 62 L760 28 L760 180 L0 180 Z" fill="url(#purple-fill)"/><path d="M0 163 L126 153 L253 146 L380 132 L506 138 L633 116 L760 82 L760 180 L0 180 Z" fill="url(#blue-fill)"/><polyline class="line-purple" points="0,143 126,124 253,108 380,77 506,91 633,62 760,28"/><polyline class="line-blue" points="0,163 126,153 253,146 380,132 506,138 633,116 760,82"/><g class="chart-points purple-points"><circle cx="0" cy="143" r="3.5"/><circle cx="126" cy="124" r="3.5"/><circle cx="253" cy="108" r="3.5"/><circle cx="380" cy="77" r="3.5"/><circle cx="506" cy="91" r="3.5"/><circle cx="633" cy="62" r="3.5"/><circle cx="760" cy="28" r="3.5"/></g><g class="chart-points blue-points"><circle cx="0" cy="163" r="3.5"/><circle cx="126" cy="153" r="3.5"/><circle cx="253" cy="146" r="3.5"/><circle cx="380" cy="132" r="3.5"/><circle cx="506" cy="138" r="3.5"/><circle cx="633" cy="116" r="3.5"/><circle cx="760" cy="82" r="3.5"/></g></svg></div>
+          <div class="chart-bottom"><div class="chart-days"><span>١٦ أبريل</span><span>١٧ أبريل</span><span>١٨ أبريل</span><span>١٩ أبريل</span><span>٢٠ أبريل</span><span>٢١ أبريل</span><span>٢٢ أبريل</span></div><div class="legend"><span><i class="legend-dot purple-dot"></i> المشاهدات</span><span><i class="legend-dot blue-dot"></i> التفاعل</span></div></div>
+        </section>
+        <section class="panel accounts-panel"><div class="panel-heading"><h2>الحسابات المرتبطة</h2><button class="text-button" data-goto="accounts">عرض الكل</button></div>
+          <div class="social-list">
+            <div class="social-row"><span class="social-logo instagram">◎</span><div class="social-name"><strong>Instagram</strong><small>@sara.content</small></div><span class="connection-label">غير مربوط</span></div>
+            <div class="social-row"><span class="social-logo tiktok">♪</span><div class="social-name"><strong>TikTok</strong><small>@sara.content</small></div><span class="connection-label">غير مربوط</span></div>
+            <div class="social-row"><span class="social-logo youtube">▶</span><div class="social-name"><strong>YouTube</strong><small>@sara.content</small></div><span class="connection-label">غير مربوط</span></div>
+            <div class="social-row"><span class="social-logo facebook">f</span><div class="social-name"><strong>Facebook</strong><small>@sara.content</small></div><span class="connection-label">غير مربوط</span></div>
+          </div><button class="connect-link" data-goto="accounts">+ ربط حساب جديد</button>
+        </section>
+      </div>
+
+      <div class="content-grid">
+        <section class="panel posts-panel"><div class="panel-heading"><div><h2>آخر المنشورات</h2><p>تابع أداء محتواك الأخير</p></div><button class="text-button" data-goto="analytics">عرض الكل</button></div>
+          <div class="post-cards">
+            <article class="post-card" data-search="روتيني الصباحي للإنتاجية Instagram"><div class="post-image"><img src="/assets/thumbnail-morning.jpg" alt="روتين صباحي على مائدة إفطار"/><span class="duration">00:45</span><span class="image-title">روتيني الصباحي<br/>للإنتاجية</span></div><div class="post-info"><h3>روتيني الصباحي للإنتاجية</h3><div class="post-meta"><span>منذ يوم واحد</span><span>•</span><span>١٩ أكتوبر</span></div><div class="post-metrics"><span>◉ ١٨٫٤ ألف</span><span>♡ ٨٩٢</span><span>▢ ١٤٦</span></div><div class="post-platform"><span class="published">تم النشر</span><span>Instagram</span><span class="social-logo instagram tiny">◎</span></div></div></article>
+            <article class="post-card" data-search="وجهات سياحية مذهلة TikTok"><div class="post-image"><img src="/assets/thumbnail-travel.jpg" alt="ساحل البحر المتوسط"/><span class="duration">01:12</span><span class="image-title">٥ وجهات سياحية<br/>مذهلة</span></div><div class="post-info"><h3>٥ وجهات سياحية مذهلة</h3><div class="post-meta"><span>منذ يومين</span><span>•</span><span>١٨ أكتوبر</span></div><div class="post-metrics"><span>◉ ١٢٫٣ ألف</span><span>♡ ٧١٠</span><span>▢ ٩٣</span></div><div class="post-platform"><span class="scheduled">قيد الجدولة</span><span>TikTok</span><span class="social-logo tiktok tiny">♪</span></div></div></article>
+            <article class="post-card" data-search="ذكاء اصطناعي صناعة محتوى YouTube"><div class="post-image"><img src="/assets/thumbnail-creator.jpg" alt="أدوات تصوير وصناعة محتوى"/><span class="duration">02:28</span><span class="image-title">كيف تصنع محتوى<br/>بالذكاء الاصطناعي؟</span></div><div class="post-info"><h3>كيف تصنع محتوى بالذكاء الاصطناعي؟</h3><div class="post-meta"><span>منذ ٣ أيام</span><span>•</span><span>١٧ أكتوبر</span></div><div class="post-metrics"><span>◉ ٨٫٧ ألف</span><span>♡ ٤٣٠</span><span>▢ ٦٢</span></div><div class="post-platform"><span class="draft">مسودة</span><span>YouTube</span><span class="social-logo youtube tiny">▶</span></div></div></article>
+          </div>
+        </section>
+        <section class="panel assistant-panel"><div class="panel-heading"><div class="assistant-title"><span class="star-icon">✦</span><h2>مساعد الردود الذكي</h2></div><button class="text-button" data-goto="comments">عرض الكل</button></div>
+          <div class="comment-preview"><div class="comment-author"><span class="mini-avatar">ن</span><div><strong>نور عبدالله</strong><small>منذ ٣ ساعات · Instagram</small></div><span class="comment-new">جديد</span></div><p>المحتوى رائع ومفيد جدًا! هل يمكن أن تشاركي مزيدًا من التفاصيل حول الأدوات المستخدمة؟</p><div class="suggestion-box"><span class="suggestion-label">✦ اقتراح رد</span>سعيدة إن المحتوى عجبك! قريبًا هشارك تفاصيل أكثر عن الأدوات والخطوات.</div><div class="comment-actions"><button class="button button-quiet button-sm" data-goto="comments">مراجعة</button><button class="button button-primary button-sm reply-button">اقتراح رد</button></div></div>
+          <div class="comment-preview second-comment"><div class="comment-author"><span class="mini-avatar mint">م</span><div><strong>محمد علي</strong><small>منذ ٥ ساعات · TikTok</small></div></div><p>ممكن تنزل الفيديو كامل؟</p><div class="comment-actions"><button class="button button-quiet button-sm" data-goto="comments">مراجعة</button><button class="button button-primary button-sm reply-button">اقتراح رد</button></div></div>
+        </section>
+      </div>
+      <div class="model-strip panel"><div><span class="model-mini-icon">✦</span><strong>نماذج الذكاء الاصطناعي</strong><small>أدواتك الإبداعية في مكان واحد</small></div><div class="model-badges"><span class="model-badge"><i>✦</i> Gemini</span><span class="model-badge"><i class="manus-mark">M</i> Manus</span><span class="model-badge"><i class="chatgpt-mark">◉</i> ChatGPT</span></div><button class="text-button" data-goto="settings">إعداد مفاتيح API ←</button></div>
+    </section>
+
+    <section class="page" id="page-create" data-page-title="صناعة الفيديو">
+      <div class="page-heading"><div><h2>حوّل الفكرة إلى فيديو</h2><p>ابدأ بالنص، واختر الذكاء الاصطناعي المساعد.</p></div><span class="page-heading-mark">✦</span></div>
+      <div class="create-layout"><div class="panel create-form"><div class="form-step"><span>١</span><div><h3>ما فكرة الفيديو؟</h3><p>اكتب موضوعًا أو وصفًا بسيطًا للفيديو الذي تريد صنعه.</p></div></div><textarea id="video-topic" class="field textarea" rows="4" placeholder="مثال: ٥ نصائح بسيطة لروتين صباحي أكثر إنتاجية..."></textarea><div class="form-row"><label class="field-label">مساعد الكتابة<select id="ai-provider" class="field select"><option value="gemini">Gemini</option><option value="openai">ChatGPT / OpenAI</option></select></label><label class="field-label">منصة النشر<select id="target-platform" class="field select"><option>Instagram Reels</option><option>TikTok</option><option>YouTube Shorts</option><option>Facebook Reels</option></select></label></div><div class="form-step output-step"><span>٢</span><div><h3>نص الفيديو</h3><p>أنشئ نصًا أوليًا ثم عدّله على طريقتك.</p></div></div><textarea id="script-output" class="field textarea script-area" rows="6" placeholder="سيظهر النص المقترح هنا..."></textarea><div class="form-actions"><button class="button button-primary" id="generate-script">✦ إنشاء نص الفيديو</button><button class="button button-quiet" id="generate-video">إنشاء فيديو <span>↗</span></button></div></div><aside class="panel helper-panel"><span class="helper-spark">✦</span><h3>ابدأ بفكرة واضحة</h3><p>كلما وصفت جمهورك والرسالة التي تريد إيصالها، ساعد الذكاء الاصطناعي في اقتراح نص أقرب لأسلوبك.</p><div class="helper-example"><span>جرّب فكرة مثل</span>«نصيحة سريعة لأصحاب المشاريع الصغيرة لزيادة التفاعل»</div><button class="text-button" data-goto="settings">إعداد Gemini أو ChatGPT ←</button></aside></div>
+    </section>
+
+    <section class="page" id="page-schedule" data-page-title="جدول النشر">
+      <div class="page-heading"><div><h2>جدول النشر</h2><p>مساحة لمتابعة المحتوى المجهّز ومواعيد النشر.</p></div><button class="button button-primary" data-goto="create">+ إضافة محتوى</button></div><div class="panel empty-state"><div class="empty-icon">▦</div><h3>خطتك تبدأ من هنا</h3><p>لا توجد منشورات مجدولة فعلية بعد. اربط حساباتك وأكمل تكامل النشر لإرسال محتواك تلقائيًا.</p><button class="button button-soft" data-goto="accounts">ربط حسابات التواصل</button></div>
+    </section>
+
+    <section class="page" id="page-analytics" data-page-title="التحليلات">
+      <div class="page-heading"><div><h2>تحليلات المحتوى</h2><p>الأرقام الظاهرة في لوحة العرض تجريبية وليست بيانات حساباتك.</p></div><span class="sample-badge">بيانات توضيحية</span></div><div class="stats-grid compact-stats"><article class="stat-card"><span class="stat-label">المشاهدات</span><div class="stat-value">٢٤٨٬٠٠٠</div><span class="trend up">↑ 12% هذا الأسبوع</span></article><article class="stat-card"><span class="stat-label">معدل التفاعل</span><div class="stat-value">٨٫٦٪</div><span class="trend up">↑ 2.4% هذا الأسبوع</span></article><article class="stat-card"><span class="stat-label">أفضل منصة</span><div class="stat-value">Instagram</div><span class="stat-label">حسب نموذج العرض</span></article></div><div class="panel empty-state"><h3>اربط حساباتك لعرض تقارير حقيقية</h3><p>تتطلب بيانات المشاهدات والتعليقات صلاحيات API وموافقة كل منصة اجتماعية.</p><button class="button button-primary" data-goto="accounts">إعداد الحسابات</button></div>
+    </section>
+
+    <section class="page" id="page-comments" data-page-title="التعليقات">
+      <div class="page-heading"><div><h2>مركز التعليقات</h2><p>راجع الردود المقترحة قبل إرسالها من حسابك.</p></div><span class="sample-badge">التعليقات تجريبية</span></div><div id="comments-list" class="comments-list"></div><div class="panel notice-panel"><span>ⓘ</span><p>المساعد يقترح ردودًا فقط في هذه النسخة. إرسال رد تلقائي يتطلب تكامل API وصلاحيات التعليقات للمنصة.</p></div>
+    </section>
+
+    <section class="page" id="page-accounts" data-page-title="ربط الحسابات">
+      <div class="page-heading"><div><h2>حساباتك الاجتماعية</h2><p>اربط حسابات منشئي المحتوى عبر OAuth الرسمي لكل منصة.</p></div></div><div class="social-connect-grid">
+        <article class="panel connect-card"><span class="social-logo instagram">◎</span><div><h3>Instagram</h3><p>Reels والتحليلات والتعليقات.</p></div><span class="connection-label">غير مربوط</span><button class="button button-soft" data-config-provider="instagram">إعداد الاتصال</button></article>
+        <article class="panel connect-card"><span class="social-logo facebook">f</span><div><h3>Facebook</h3><p>صفحات وReels وإحصائيات.</p></div><span class="connection-label">غير مربوط</span><button class="button button-soft" data-config-provider="facebook">إعداد الاتصال</button></article>
+        <article class="panel connect-card"><span class="social-logo tiktok">♪</span><div><h3>TikTok</h3><p>فيديوهات قصيرة وأداء المنشورات.</p></div><span class="connection-label">غير مربوط</span><button class="button button-soft" data-config-provider="tiktok">إعداد الاتصال</button></article>
+        <article class="panel connect-card"><span class="social-logo youtube">▶</span><div><h3>YouTube</h3><p>Shorts والمشاهدات والتعليقات.</p></div><span class="connection-label">غير مربوط</span><button class="button button-soft" data-config-provider="youtube">إعداد الاتصال</button></article>
+      </div><div class="panel notice-panel"><span>ⓘ</span><p>تسجيل الدخول الحقيقي يحتاج تطبيق مطور وبيانات OAuth وموافقة المنصة على الصلاحيات المطلوبة. لن نطلب كلمة مرور حسابك الاجتماعي.</p></div>
+    </section>
+
+    <section class="page" id="page-settings" data-page-title="الإعدادات">
+      <div class="page-heading"><div><h2>الإعدادات ومفاتيح API</h2><p>لا تظهر المفاتيح المحفوظة مرة أخرى؛ يتم تشفيرها على الخادم.</p></div><span class="lock-icon">♙ مشفّر</span></div><div class="settings-layout"><div class="panel settings-panel"><h3>مفاتيح الذكاء الاصطناعي</h3><p class="panel-description">أضف مفتاحًا لتمكين إنشاء نصوص الفيديو. لا تضع مفاتيح سرية في ملفات الواجهة.</p><label class="field-label">المزوّد<select class="field select" id="settings-provider"><option value="openai">OpenAI / ChatGPT</option><option value="gemini">Google Gemini</option><option value="manus">Manus API</option></select></label><label class="field-label">مفتاح API<input class="field" type="password" id="api-key-input" autocomplete="new-password" placeholder="ألصق المفتاح هنا بعد تفعيل تسجيل الدخول"/></label><div class="key-status" id="key-status"><span class="status-dot"></span><span>يتم تحميل الحالة...</span></div><button class="button button-primary" id="save-api-key">حفظ المفتاح بشكل مشفّر</button><p class="small-note">الحفظ متاح بعد إيقاف DEMO_MODE وإعداد ADMIN_PASSWORD وSETTINGS_ENCRYPTION_KEY على الخادم.</p></div><div class="panel settings-panel"><h3>إعدادات الربط الاجتماعي</h3><p class="panel-description">بيانات OAuth تضبط في متغيرات البيئة، ثم تُستكمل معالجات التفويض لكل منصة.</p><div class="env-list"><div><span class="social-logo facebook tiny">f</span><code>FACEBOOK_CLIENT_ID / SECRET</code></div><div><span class="social-logo instagram tiny">◎</span><code>INSTAGRAM_CLIENT_ID / SECRET</code></div><div><span class="social-logo tiktok tiny">♪</span><code>TIKTOK_CLIENT_KEY / SECRET</code></div><div><span class="social-logo youtube tiny">▶</span><code>GOOGLE_CLIENT_ID / SECRET</code></div></div><button class="button button-quiet" data-goto="accounts">إدارة الحسابات المرتبطة</button></div></div><div class="panel settings-security"><span class="security-icon">✓</span><div><strong>نصيحة أمان</strong><p>استخدم HTTPS في الاستضافة، واحتفظ بالنسخة الاحتياطية لمفتاح التشفير خارج الخادم. فقدان المفتاح يمنع فك تشفير مفاتيح API المحفوظة.</p></div></div>
+    </section>
+
+    <footer class="page-footer"><span>فيديو فلو <span class="footer-mark">✦</span></span><span>لوحة إدارة المحتوى · نسخة Node.js</span></footer>
+  </main>
+</div>
+<div class="modal-backdrop" id="auth-modal" aria-hidden="true"><form class="modal-card auth-card" id="login-form"><button type="button" class="modal-close" data-close-modal>×</button><div class="modal-mark">✦</div><h2>تسجيل الدخول</h2><p>أدخل كلمة مرور مدير التطبيق.</p><input class="field" type="password" id="login-password" placeholder="كلمة المرور" autocomplete="current-password"/><button class="button button-primary" type="submit">دخول آمن</button><small>في وضع العرض التجريبي، لا تحتاج لتسجيل الدخول.</small></form></div>
+<div class="modal-backdrop" id="video-modal" aria-hidden="true"><div class="modal-card"><button type="button" class="modal-close" data-close-modal>×</button><div class="modal-mark">✦</div><h2>إنشاء فيديو جديد</h2><p>اكتب فكرتك وسنساعدك في إعداد نص الفيديو.</p><textarea class="field textarea" id="modal-topic" rows="3" placeholder="ما الموضوع الذي تريد التحدث عنه؟"></textarea><button class="button button-primary full-button" id="modal-create">ابدأ إنشاء الفيديو <span>←</span></button></div></div>
+<div id="toast" class="toast" role="status"></div>
 </body>
 </html>
