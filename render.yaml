@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: fekra-fi-meta-publisher
+    runtime: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: npm start
+    disk:
+      name: vidflow-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DEMO_MODE
+        value: "false"
+      - key: DATA_DIR
+        value: /var/data
+      - key: META_GRAPH_VERSION
+        value: v23.0
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: SETTINGS_ENCRYPTION_KEY
+        generateValue: true
+      - key: META_APP_ID
+        sync: false
+      - key: META_APP_SECRET
+        sync: false
+      - key: OAUTH_CALLBACK_BASE_URL
+        sync: false

@@ -13,7 +13,10 @@ const configuredDataDir = process.env.DATA_DIR || 'data';
 const DATA_DIR = path.isAbsolute(configuredDataDir) ? configuredDataDir : path.join(ROOT, configuredDataDir);
 const SECRET_FILE = path.join(DATA_DIR, 'api-secrets.enc');
 const demoMode = process.env.DEMO_MODE !== 'false';
-const providers = ['openai', 'gemini', 'manus', 'facebook', 'instagram', 'tiktok', 'youtube'];
+const providers = ['openai', 'gemini', 'manus'];
+const META_GRAPH_VERSION = process.env.META_GRAPH_VERSION || 'v23.0';
+const META_REDIRECT_URI = () => `${String(process.env.OAUTH_CALLBACK_BASE_URL || '').replace(/\/$/, '')}/api/meta/callback`;
+const META_SCOPES = ['pages_show_list', 'pages_read_engagement', 'pages_manage_posts', 'instagram_basic', 'instagram_content_publish'];
 
 app.set('trust proxy', 1);
 app.disable('x-powered-by');
@@ -85,10 +88,7 @@ function keyStatuses() {
     openai: process.env.OPENAI_API_KEY,
     gemini: process.env.GEMINI_API_KEY,
     manus: process.env.MANUS_API_KEY,
-    facebook: process.env.FACEBOOK_CLIENT_ID && process.env.FACEBOOK_CLIENT_SECRET,
-    instagram: process.env.INSTAGRAM_CLIENT_ID && process.env.INSTAGRAM_CLIENT_SECRET,
-    tiktok: process.env.TIKTOK_CLIENT_KEY && process.env.TIKTOK_CLIENT_SECRET,
-    youtube: process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+    meta: process.env.META_APP_ID && process.env.META_APP_SECRET,
   };
   return Object.fromEntries(providers.map((name) => [name, Boolean(saved[name] || envKeys[name])]));
 }
@@ -124,7 +124,7 @@ app.get('/api/dashboard', requireAuth, (_req, res) => res.json({
     { name: 'محمد علي', platform: 'TikTok', time: 'منذ ٥ ساعات', text: 'ممكن تنزل الفيديو كامل؟', suggestion: 'أكيد! الفيديو الكامل هينزل قريبًا، تابعنا عشان يوصلك.' }
   ]
 }));
-app.get('/api/settings', requireAuth, (_req, res) => res.json({ demo: demoMode, providers: keyStatuses(), social: ['facebook', 'instagram', 'tiktok', 'youtube'].map((id) => ({ id, connected: false })) }));
+app.get('/api/settings', requireAuth, (_req, res) => { const saved = readSecrets(); res.json({ demo: demoMode, providers: keyStatuses(), social: [{ id: 'meta', connected: Boolean(saved.metaPages?.length), pages: (saved.metaPages || []).map(({id,name,instagram}) => ({id,name,instagram: instagram || null})) }] }); });
 app.put('/api/settings/keys/:provider', requireAuth, (req, res) => {
   if (demoMode) return res.status(403).json({ error: 'وضع العرض التوضيحي للقراءة فقط. عطّل DEMO_MODE واضبط تسجيل الدخول قبل حفظ المفاتيح.' });
   const provider = req.params.provider;
@@ -160,9 +160,104 @@ app.post('/api/ai/script', requireAuth, async (req, res) => {
     res.json({ ok: true, script: script || '' });
   } catch (error) { res.status(502).json({ error: error.message || 'تعذر إنشاء النص.' }); }
 });
-app.post('/api/videos/generate', requireAuth, (_req, res) => res.status(501).json({ error: 'أضف مزود صناعة الفيديو ومعلومات API الخاصة به إلى src/adapters/video-provider.js.' }));
-app.post('/api/social/:platform/publish', requireAuth, (req, res) => res.status(501).json({ error: `النشر المباشر يحتاج تطبيق OAuth وموافقة صلاحيات ${req.params.platform} وربط حساب تجاري.` }));
-app.post('/api/comments/:id/reply', requireAuth, (_req, res) => res.status(501).json({ error: 'إرسال الردود يحتاج ربط حساب المنصة وتفعيل صلاحيات إدارة التعليقات.' }));
+app.get('/api/meta/connect', requireAuth, (req, res) => {
+  if (!process.env.META_APP_ID || !process.env.META_APP_SECRET || !process.env.OAUTH_CALLBACK_BASE_URL) return res.status(503).send('أكمل إعداد META_APP_ID وMETA_APP_SECRET وOAUTH_CALLBACK_BASE_URL في متغيرات البيئة أولًا.');
+  const state = crypto.randomBytes(24).toString('hex');
+  req.session.metaOAuthState = state;
+  const params = new URLSearchParams({ client_id: process.env.META_APP_ID, redirect_uri: META_REDIRECT_URI(), state, response_type: 'code', scope: META_SCOPES.join(',') });
+  res.redirect(`https://www.facebook.com/${META_GRAPH_VERSION}/dialog/oauth?${params.toString()}`);
+});
+
+app.get('/api/meta/callback', async (req, res) => {
+  const { code, state, error, error_description: errorDescription } = req.query;
+  if (error) return res.status(400).send(`تم إلغاء ربط Meta: ${String(errorDescription || error)}`);
+  if (!code || !state || !req.session.metaOAuthState || state !== req.session.metaOAuthState) return res.status(400).send('تعذر التحقق من طلب الربط. ارجع إلى لوحة التحكم وابدأ الربط من جديد.');
+  delete req.session.metaOAuthState;
+  try {
+    const tokenUrl = new URL(`https://graph.facebook.com/${META_GRAPH_VERSION}/oauth/access_token`);
+    tokenUrl.search = new URLSearchParams({ client_id: process.env.META_APP_ID, client_secret: process.env.META_APP_SECRET, redirect_uri: META_REDIRECT_URI(), code: String(code) }).toString();
+    let tokenResponse = await fetch(tokenUrl);
+    let tokenData = await tokenResponse.json();
+    if (!tokenResponse.ok || !tokenData.access_token) throw new Error(tokenData.error?.message || 'فشل استبدال رمز Meta.');
+    const longUrl = new URL(`https://graph.facebook.com/${META_GRAPH_VERSION}/oauth/access_token`);
+    longUrl.search = new URLSearchParams({ grant_type: 'fb_exchange_token', client_id: process.env.META_APP_ID, client_secret: process.env.META_APP_SECRET, fb_exchange_token: tokenData.access_token }).toString();
+    tokenResponse = await fetch(longUrl);
+    const longData = await tokenResponse.json();
+    if (tokenResponse.ok && longData.access_token) tokenData = longData;
+    const pagesUrl = new URL(`https://graph.facebook.com/${META_GRAPH_VERSION}/me/accounts`);
+    pagesUrl.search = new URLSearchParams({ fields: 'id,name,access_token,instagram_business_account{id,username}', limit: '100', access_token: tokenData.access_token }).toString();
+    const pagesResponse = await fetch(pagesUrl);
+    const pagesData = await pagesResponse.json();
+    if (!pagesResponse.ok) throw new Error(pagesData.error?.message || 'لم يتمكن Meta من إرجاع الصفحات. تأكد من صلاحيات التطبيق والحساب.');
+    const saved = readSecrets();
+    saved.metaUserToken = tokenData.access_token;
+    saved.metaUserTokenExpiresIn = tokenData.expires_in || null;
+    saved.metaPages = (pagesData.data || []).map((page) => ({ id: page.id, name: page.name, accessToken: page.access_token, instagram: page.instagram_business_account || null }));
+    writeSecrets(saved);
+    return res.redirect('/#accounts?meta=connected');
+  } catch (e) {
+    console.error('Meta OAuth callback failed:', e.message);
+    return res.status(502).send(`فشل ربط Meta: ${e.message}. ارجع للوحة التحكم وتأكد من Redirect URI والصلاحيات.`);
+  }
+});
+
+app.get('/api/meta/pages', requireAuth, (_req, res) => {
+  const saved = readSecrets();
+  res.json({ connected: Boolean(saved.metaUserToken), pages: (saved.metaPages || []).map(({id,name,instagram}) => ({ id, name, instagram: instagram || null })) });
+});
+app.delete('/api/meta/disconnect', requireAuth, (_req, res) => {
+  const saved = readSecrets(); delete saved.metaUserToken; delete saved.metaUserTokenExpiresIn; delete saved.metaPages;
+  try { writeSecrets(saved); res.json({ ok: true }); } catch (e) { res.status(503).json({ error: e.message }); }
+});
+
+async function metaGraph(pathname, params, method = 'GET') {
+  const url = new URL(`https://graph.facebook.com/${META_GRAPH_VERSION}/${pathname.replace(/^\/+/, '')}`);
+  let options = { method, headers: { 'Content-Type': 'application/x-www-form-urlencoded' } };
+  if (method === 'GET') url.search = new URLSearchParams(params).toString();
+  else options.body = new URLSearchParams(Object.entries(params).map(([key, value]) => [key, String(value)])).toString();
+  const response = await fetch(url, options); const data = await response.json().catch(() => ({}));
+  if (!response.ok || data.error) throw new Error(data.error?.message || `Meta API error (${response.status})`);
+  return data;
+}
+
+app.post('/api/meta/publish', requireAuth, async (req, res) => {
+  const { pageId, platform, message = '', imageUrl = '', videoUrl = '', link = '' } = req.body || {};
+  const saved = readSecrets();
+  const page = (saved.metaPages || []).find((item) => item.id === String(pageId || ''));
+  if (!page) return res.status(400).json({ error: 'اختر صفحة مرتبطة أولًا.' });
+  const text = String(message).trim().slice(0, 5000);
+  const image = String(imageUrl).trim(); const video = String(videoUrl).trim(); const externalLink = String(link).trim();
+  for (const candidate of [image, video, externalLink].filter(Boolean)) { try { const u = new URL(candidate); if (u.protocol !== 'https:') throw new Error(); } catch { return res.status(400).json({ error: 'روابط الصور والفيديو والروابط الخارجية يجب أن تكون روابط HTTPS عامة وصالحة.' }); } }
+  try {
+    let result;
+    if (platform === 'instagram') {
+      if (!page.instagram?.id) return res.status(400).json({ error: 'الصفحة المختارة لا تحتوي على حساب Instagram احترافي مربوط.' });
+      if (!image && !video) return res.status(400).json({ error: 'نشر Instagram يحتاج رابط صورة أو فيديو HTTPS متاحًا للعامة.' });
+      const media = await metaGraph(`${page.instagram.id}/media`, { access_token: page.accessToken, caption: text, ...(video ? { media_type: 'REELS', video_url: video } : { image_url: image }) }, 'POST');
+      if (video) {
+        let ready = false;
+        for (let attempt = 0; attempt < 24; attempt++) {
+          await new Promise(resolve => setTimeout(resolve, 2500));
+          const status = await metaGraph(media.id, { fields: 'status_code', access_token: page.accessToken });
+          if (status.status_code === 'FINISHED') { ready = true; break; }
+          if (status.status_code === 'ERROR' || status.status_code === 'EXPIRED') throw new Error('تعذر تجهيز فيديو Instagram. افحص رابط الفيديو وصيغته.');
+        }
+        if (!ready) throw new Error('استغرق تجهيز Reel وقتًا طويلًا؛ تحقق من حالة الوسيط في Meta وحاول مرة أخرى.');
+      }
+      result = await metaGraph(`${page.instagram.id}/media_publish`, { access_token: page.accessToken, creation_id: media.id }, 'POST');
+      return res.json({ ok: true, platform, id: result.id, message: 'تم إرسال المحتوى إلى Instagram بنجاح.' });
+    }
+    if (platform !== 'facebook') return res.status(400).json({ error: 'المنصة غير مدعومة في هذا المسار.' });
+    if (video) result = await metaGraph(`${page.id}/videos`, { access_token: page.accessToken, file_url: video, description: text }, 'POST');
+    else if (image) result = await metaGraph(`${page.id}/photos`, { access_token: page.accessToken, url: image, caption: text }, 'POST');
+    else result = await metaGraph(`${page.id}/feed`, { access_token: page.accessToken, message: text, ...(externalLink ? { link: externalLink } : {}) }, 'POST');
+    res.json({ ok: true, platform, id: result.id || result.post_id || null, message: 'قبل Meta المنشور بنجاح.' });
+  } catch (e) { res.status(502).json({ error: `تعذر النشر من Meta: ${e.message}` }); }
+});
+
+app.post('/api/videos/generate', requireAuth, (_req, res) => res.status(501).json({ error: 'توليد ملف فيديو كامل يحتاج مزود فيديو بالذكاء الاصطناعي ومفتاح API خاصًا به. إنشاء النص متاح من OpenAI أو Gemini.' }));
+app.post('/api/social/:platform/publish', requireAuth, (req, res) => res.status(400).json({ error: 'استخدم واجهة Meta للنشر من /api/meta/publish، والمنصات الأخرى غير مفعلة في هذه النسخة.' }));
+app.post('/api/comments/:id/reply', requireAuth, (_req, res) => res.status(501).json({ error: 'إرسال الردود على التعليقات يحتاج إضافة صلاحيات API ومعالج خاص بالتعليقات.' }));
 app.use('/api', (_req, res) => res.status(404).json({ error: 'المسار غير موجود.' }));
 app.use(express.static(path.join(ROOT, 'public'), { maxAge: '1h' }));
 app.get('*', (_req, res) => res.sendFile(path.join(ROOT, 'public', 'index.html')));

@@ -32,13 +32,13 @@
     </nav>
     <div class="sidebar-bottom">
       <div class="upgrade-card">
-        <div class="sparkle">✦</div><span class="eyebrow">مساحة العمل التجريبية</span>
+        <div class="sparkle">✦</div><span class="eyebrow">مساحة العمل</span>
         <h3>محتوى أفضل،<br/>نتائج أكبر</h3>
         <p>اربط حساباتك لبدء متابعة أداء محتواك.</p>
         <button class="button button-white button-sm" data-goto="accounts">ربط الحسابات <span>←</span></button>
         <div class="orb orb-one"></div><div class="orb orb-two"></div>
       </div>
-      <div class="workspace-foot"><span class="status-dot"></span> مساحة العمل التجريبية</div>
+      <div class="workspace-foot"><span class="status-dot"></span> مساحة العمل</div>
     </div>
   </aside>
 
@@ -52,7 +52,7 @@
       </div>
     </header>
 
-    <div class="notice-banner"><span class="notice-icon">ⓘ</span><span>وضع العرض التجريبي — الأرقام والمنشورات أمثلة توضيحية. اربط المنصات ومفاتيح API لعرض بياناتك الحقيقية.</span><button class="notice-close" aria-label="إخفاء التنبيه">×</button></div>
+    <div class="notice-banner"><span class="notice-icon">ⓘ</span><span>تنبيه: إحصائيات لوحة النظرة العامة ما زالت أمثلة توضيحية؛ ربط Meta والنشر متاحان من صفحة الحسابات.</span><button class="notice-close" aria-label="إخفاء التنبيه">×</button></div>
 
     <section class="page active" id="page-overview" data-page-title="نظرة عامة">
       <div class="stats-grid">
@@ -110,17 +110,27 @@
       <div class="page-heading"><div><h2>مركز التعليقات</h2><p>راجع الردود المقترحة قبل إرسالها من حسابك.</p></div><span class="sample-badge">التعليقات تجريبية</span></div><div id="comments-list" class="comments-list"></div><div class="panel notice-panel"><span>ⓘ</span><p>المساعد يقترح ردودًا فقط في هذه النسخة. إرسال رد تلقائي يتطلب تكامل API وصلاحيات التعليقات للمنصة.</p></div>
     </section>
 
-    <section class="page" id="page-accounts" data-page-title="ربط الحسابات">
-      <div class="page-heading"><div><h2>حساباتك الاجتماعية</h2><p>اربط حسابات منشئي المحتوى عبر OAuth الرسمي لكل منصة.</p></div></div><div class="social-connect-grid">
-        <article class="panel connect-card"><span class="social-logo instagram">◎</span><div><h3>Instagram</h3><p>Reels والتحليلات والتعليقات.</p></div><span class="connection-label">غير مربوط</span><button class="button button-soft" data-config-provider="instagram">إعداد الاتصال</button></article>
-        <article class="panel connect-card"><span class="social-logo facebook">f</span><div><h3>Facebook</h3><p>صفحات وReels وإحصائيات.</p></div><span class="connection-label">غير مربوط</span><button class="button button-soft" data-config-provider="facebook">إعداد الاتصال</button></article>
-        <article class="panel connect-card"><span class="social-logo tiktok">♪</span><div><h3>TikTok</h3><p>فيديوهات قصيرة وأداء المنشورات.</p></div><span class="connection-label">غير مربوط</span><button class="button button-soft" data-config-provider="tiktok">إعداد الاتصال</button></article>
-        <article class="panel connect-card"><span class="social-logo youtube">▶</span><div><h3>YouTube</h3><p>Shorts والمشاهدات والتعليقات.</p></div><span class="connection-label">غير مربوط</span><button class="button button-soft" data-config-provider="youtube">إعداد الاتصال</button></article>
-      </div><div class="panel notice-panel"><span>ⓘ</span><p>تسجيل الدخول الحقيقي يحتاج تطبيق مطور وبيانات OAuth وموافقة المنصة على الصلاحيات المطلوبة. لن نطلب كلمة مرور حسابك الاجتماعي.</p></div>
+    <section class="page" id="page-accounts" data-page-title="ربط حسابات Meta">
+      <div class="page-heading"><div><h2>ربط Facebook وInstagram</h2><p>اربط حساب Meta عبر التفويض الرسمي، ثم اختر صفحة تديرها للنشر.</p></div></div>
+      <div class="social-connect-grid">
+        <article class="panel connect-card"><span class="social-logo facebook">f</span><div><h3>Facebook Pages</h3><p>عرض الصفحات التي تمنح التطبيق صلاحية إدارتها ونشر المحتوى عليها.</p></div><span class="connection-label" id="meta-status">غير مربوط</span><button class="button button-primary" id="meta-connect">ربط حساب Meta</button></article>
+        <article class="panel connect-card"><span class="social-logo instagram">◎</span><div><h3>Instagram الاحترافي</h3><p>يظهر الحساب هنا إذا كان مربوطًا بصفحة Facebook ومتاحًا عبر صلاحيات التطبيق.</p></div><span class="connection-label">عبر Meta</span></article>
+      </div>
+      <div class="panel settings-panel" style="margin-top:18px"><div class="panel-heading"><div><h2>الصفحات المتاحة</h2><p>تُحمّل من Meta بعد نجاح التفويض.</p></div><button class="button button-soft" id="meta-refresh">تحديث</button></div><div id="meta-pages-list"><p class="panel-description">اربط حساب Meta لعرض الصفحات.</p></div><button class="button button-quiet" id="meta-disconnect" style="margin-top:12px">فصل حساب Meta</button></div>
+      <div class="panel settings-panel" style="margin-top:18px"><h2>نشر محتوى فعلي</h2><p class="panel-description">روابط الصور والفيديو يجب أن تكون HTTPS ومتاحة للعامة؛ إنستجرام يحتاج صورة أو فيديو. اختبر أولًا على صفحة تملكها.</p>
+        <label class="field-label">الصفحة <select class="field select" id="meta-page-select"><option value="">اربط الحساب واختر صفحة</option></select></label>
+        <label class="field-label">النشر على <select class="field select" id="meta-platform-select"><option value="facebook">Facebook Page</option><option value="instagram">Instagram الاحترافي المرتبط بالصفحة</option></select></label>
+        <label class="field-label">نص المنشور / الكابشن<textarea class="field textarea" id="meta-message" rows="4" placeholder="اكتب النص أو وصف المنشور"></textarea></label>
+        <label class="field-label">رابط صورة HTTPS (اختياري)<input class="field" id="meta-image-url" type="url" placeholder="https://example.com/image.jpg"/></label>
+        <label class="field-label">رابط فيديو HTTPS (اختياري)<input class="field" id="meta-video-url" type="url" placeholder="https://example.com/video.mp4"/></label>
+        <label class="field-label">رابط خارجي (اختياري — Facebook فقط)<input class="field" id="meta-link-url" type="url" placeholder="https://example.com/article"/></label>
+        <button class="button button-primary" id="meta-publish">نشر الآن</button><p class="small-note">النشر الفعلي يعتمد على موافقة Meta والصلاحيات الممنوحة ونوع الحساب. لا تغلق الصفحة حتى تظهر نتيجة الطلب.</p>
+      </div>
+      <div class="panel notice-panel"><span>ⓘ</span><p>يتطلب الربط ضبط META_APP_ID وMETA_APP_SECRET وOAUTH_CALLBACK_BASE_URL، وإضافة رابط الرجوع نفسه في إعدادات تطبيق Meta. بيانات النشر تحفظ مشفرة على الخادم.</p></div>
     </section>
 
     <section class="page" id="page-settings" data-page-title="الإعدادات">
-      <div class="page-heading"><div><h2>الإعدادات ومفاتيح API</h2><p>لا تظهر المفاتيح المحفوظة مرة أخرى؛ يتم تشفيرها على الخادم.</p></div><span class="lock-icon">♙ مشفّر</span></div><div class="settings-layout"><div class="panel settings-panel"><h3>مفاتيح الذكاء الاصطناعي</h3><p class="panel-description">أضف مفتاحًا لتمكين إنشاء نصوص الفيديو. لا تضع مفاتيح سرية في ملفات الواجهة.</p><label class="field-label">المزوّد<select class="field select" id="settings-provider"><option value="openai">OpenAI / ChatGPT</option><option value="gemini">Google Gemini</option><option value="manus">Manus API</option></select></label><label class="field-label">مفتاح API<input class="field" type="password" id="api-key-input" autocomplete="new-password" placeholder="ألصق المفتاح هنا بعد تفعيل تسجيل الدخول"/></label><div class="key-status" id="key-status"><span class="status-dot"></span><span>يتم تحميل الحالة...</span></div><button class="button button-primary" id="save-api-key">حفظ المفتاح بشكل مشفّر</button><p class="small-note">الحفظ متاح بعد إيقاف DEMO_MODE وإعداد ADMIN_PASSWORD وSETTINGS_ENCRYPTION_KEY على الخادم.</p></div><div class="panel settings-panel"><h3>إعدادات الربط الاجتماعي</h3><p class="panel-description">بيانات OAuth تضبط في متغيرات البيئة، ثم تُستكمل معالجات التفويض لكل منصة.</p><div class="env-list"><div><span class="social-logo facebook tiny">f</span><code>FACEBOOK_CLIENT_ID / SECRET</code></div><div><span class="social-logo instagram tiny">◎</span><code>INSTAGRAM_CLIENT_ID / SECRET</code></div><div><span class="social-logo tiktok tiny">♪</span><code>TIKTOK_CLIENT_KEY / SECRET</code></div><div><span class="social-logo youtube tiny">▶</span><code>GOOGLE_CLIENT_ID / SECRET</code></div></div><button class="button button-quiet" data-goto="accounts">إدارة الحسابات المرتبطة</button></div></div><div class="panel settings-security"><span class="security-icon">✓</span><div><strong>نصيحة أمان</strong><p>استخدم HTTPS في الاستضافة، واحتفظ بالنسخة الاحتياطية لمفتاح التشفير خارج الخادم. فقدان المفتاح يمنع فك تشفير مفاتيح API المحفوظة.</p></div></div>
+      <div class="page-heading"><div><h2>الإعدادات ومفاتيح API</h2><p>لا تظهر المفاتيح المحفوظة مرة أخرى؛ يتم تشفيرها على الخادم.</p></div><span class="lock-icon">♙ مشفّر</span></div><div class="settings-layout"><div class="panel settings-panel"><h3>مفاتيح الذكاء الاصطناعي</h3><p class="panel-description">أضف مفتاحًا لتمكين إنشاء نصوص الفيديو. لا تضع مفاتيح سرية في ملفات الواجهة.</p><label class="field-label">المزوّد<select class="field select" id="settings-provider"><option value="openai">OpenAI / ChatGPT</option><option value="gemini">Google Gemini</option><option value="manus">Manus API</option></select></label><label class="field-label">مفتاح API<input class="field" type="password" id="api-key-input" autocomplete="new-password" placeholder="ألصق المفتاح هنا بعد تفعيل تسجيل الدخول"/></label><div class="key-status" id="key-status"><span class="status-dot"></span><span>يتم تحميل الحالة...</span></div><button class="button button-primary" id="save-api-key">حفظ المفتاح بشكل مشفّر</button><p class="small-note">الحفظ متاح بعد إيقاف DEMO_MODE وإعداد ADMIN_PASSWORD وSETTINGS_ENCRYPTION_KEY على الخادم.</p></div><div class="panel settings-panel"><h3>إعدادات الربط الاجتماعي</h3><p class="panel-description">بيانات OAuth تضبط في متغيرات البيئة، ثم تُستكمل معالجات التفويض لكل منصة.</p><div class="env-list"><div><span class="social-logo facebook tiny">f</span><code>META_APP_ID / META_APP_SECRET</code></div><div><span class="social-logo instagram tiny">◎</span><code>OAUTH_CALLBACK_BASE_URL</code></div><div><span class="social-logo facebook tiny">f</span><code>META_GRAPH_VERSION (اختياري)</code></div></div><button class="button button-quiet" data-goto="accounts">إدارة الحسابات المرتبطة</button></div></div><div class="panel settings-security"><span class="security-icon">✓</span><div><strong>نصيحة أمان</strong><p>استخدم HTTPS في الاستضافة، واحتفظ بالنسخة الاحتياطية لمفتاح التشفير خارج الخادم. فقدان المفتاح يمنع فك تشفير مفاتيح API المحفوظة.</p></div></div>
     </section>
 
     <footer class="page-footer"><span>فيديو فلو <span class="footer-mark">✦</span></span><span>لوحة إدارة المحتوى · نسخة Node.js</span></footer>

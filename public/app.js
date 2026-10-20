@@ -30,7 +30,7 @@ $$('[data-close-modal]').forEach((button) => button.addEventListener('click', ()
 $$('.modal-backdrop').forEach((backdrop) => backdrop.addEventListener('click', (event) => { if (event.target === backdrop) closeModal(backdrop); }));
 $('.notice-close')?.addEventListener('click', () => $('.notice-banner').remove());
 $$('.reply-button').forEach((button) => button.addEventListener('click', () => goTo('comments')));
-$$('[data-config-provider]').forEach((button) => button.addEventListener('click', () => { goTo('settings'); toast('أضف بيانات OAuth للمنصة في متغيرات البيئة، ثم أكمل معالج الربط الخاص بها.'); }));
+$$('[data-config-provider]').forEach((button) => button.addEventListener('click', () => { goTo('accounts'); }));
 $('#search-input')?.addEventListener('input', (event) => {
   const query = event.target.value.trim().toLowerCase();
   if (query) goTo('overview');
@@ -93,3 +93,33 @@ $('#modal-create')?.addEventListener('click', () => { const topic = $('#modal-to
   const date = new Intl.DateTimeFormat('ar-EG', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
   $('#today-label').textContent = date;
 })();
+
+
+async function refreshMetaPages() {
+  try {
+    const data = await api('/api/meta/pages');
+    const status = $('#meta-status');
+    if (status) status.textContent = data.connected ? `مربوط (${data.pages.length} صفحة)` : 'غير مربوط';
+    const select = $('#meta-page-select');
+    const list = $('#meta-pages-list');
+    if (select) select.innerHTML = '<option value="">اختر الصفحة</option>' + data.pages.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}${p.instagram ? ' — Instagram متاح' : ''}</option>`).join('');
+    if (list) list.innerHTML = data.pages.length ? data.pages.map(p => `<div class="social-row"><span class="social-logo facebook">f</span><div class="social-name"><strong>${escapeHtml(p.name)}</strong><small>Page ID: ${escapeHtml(p.id)}${p.instagram ? ` · Instagram: ${escapeHtml(p.instagram.username || p.instagram.id)}` : ''}</small></div><span class="connection-label">متصلة</span></div>`).join('') : '<p class="panel-description">لا توجد صفحات متاحة. تأكد أنك مدير صفحة وأن التطبيق لديه الصلاحيات المطلوبة.</p>';
+  } catch (error) { if (!error.message.includes('سجّل الدخول')) toast(error.message, true); }
+}
+$('#meta-connect')?.addEventListener('click', async () => {
+  try { const session = await api('/api/auth/session'); if (!session.authenticated && !session.demo) return openModal('auth-modal'); window.location.href = '/api/meta/connect'; }
+  catch (error) { toast(error.message, true); }
+});
+$('#meta-refresh')?.addEventListener('click', refreshMetaPages);
+$('#meta-disconnect')?.addEventListener('click', async () => { if (!confirm('هل تريد فصل حساب Meta وحذف الرموز المحفوظة؟')) return; try { await api('/api/meta/disconnect', { method: 'DELETE' }); await refreshMetaPages(); toast('تم فصل حساب Meta.'); } catch (error) { toast(error.message, true); } });
+$('#meta-publish')?.addEventListener('click', async () => {
+  const button = $('#meta-publish'); button.disabled = true; button.textContent = 'جارٍ النشر...';
+  try {
+    const result = await api('/api/meta/publish', { method: 'POST', body: JSON.stringify({ pageId: $('#meta-page-select').value, platform: $('#meta-platform-select').value, message: $('#meta-message').value, imageUrl: $('#meta-image-url').value, videoUrl: $('#meta-video-url').value, link: $('#meta-link-url').value }) });
+    toast(`${result.message}${result.id ? ` (ID: ${result.id})` : ''}`);
+  } catch (error) { toast(error.message, true); }
+  finally { button.disabled = false; button.textContent = 'نشر الآن'; }
+});
+const previousGoToForMeta = goTo;
+goTo = function(page) { previousGoToForMeta(page); if (page === 'accounts') refreshMetaPages(); };
+if (location.hash.includes('meta=connected')) { history.replaceState({}, '', location.pathname); toast('تم ربط Meta. حدّث قائمة الصفحات إذا لم تظهر.'); goTo('accounts'); }
